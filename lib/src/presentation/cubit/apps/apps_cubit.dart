@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:nestra/src/core/logging/logger.dart';
 import 'package:nestra/src/domain/entities/app_definition.dart';
-import 'package:injectable/injectable.dart';
 import 'package:nestra/src/domain/usecases/apps_usecase.dart';
 
 sealed class AppsState {}
