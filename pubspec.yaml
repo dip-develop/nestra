@@ -20,7 +20,7 @@ dependencies:
   webview_cef: ^0.2.2
   tray_manager: ^0.5.1
   launch_at_startup: ^0.5.1
-  get_it: ^7.7.0
+  get_it: ^8.2.0
   injectable: ^2.4.2
   flutter_bloc: ^8.1.6
   equatable: ^2.0.5
