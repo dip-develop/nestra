@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:nestra/src/domain/interfaces/application_interface.dart';
-import 'package:webview_cef/webview_cef.dart';
 import 'package:webview_cef/src/webview_inject_user_script.dart';
+import 'package:webview_cef/webview_cef.dart';
+
+import '../../domain/entities/app_definition.dart';
 
 class BrowserWidget extends StatefulWidget {
-  final Application application;
-
   const BrowserWidget({super.key, required this.application});
+  final AppDefinition application;
 
   @override
   State<BrowserWidget> createState() => _BrowserWidgetState();
@@ -68,10 +67,10 @@ class _BrowserWidgetState extends State<BrowserWidget> {
   Future<void> initPlatformState() async {
     if (_controller == null) return;
     await _webviewManager
-        .initialize(userAgent: "nestra/userAgent")
+        .initialize(userAgent: 'nestra/userAgent')
         .timeout(const Duration(seconds: 20));
     if (!mounted) return;
-    final url = widget.application.baseUrl.toString();
+    final url = widget.application.url.toString();
     await _controller!.initialize(url).timeout(const Duration(seconds: 20));
   }
 

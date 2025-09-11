@@ -9,6 +9,20 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+  exclude:
+    - lib/**.g.dart
+    - lib/**.freezed.dart
+    - lib/**.config.dart
+    - build/**
+  errors:
+    missing_required_param: error
+    missing_return: error
+    dead_code: warning
+
 linter:
   # The lint rules applied to this project can be customized in the
   # section below to disable rules from the `package:flutter_lints/flutter.yaml`
@@ -21,8 +35,28 @@ linter:
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
   rules:
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
-    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+    prefer_single_quotes: true
+    always_declare_return_types: true
+    avoid_print: true
+    cancel_subscriptions: true
+    close_sinks: true
+    directives_ordering: true
+    eol_at_end_of_file: true
+    avoid_unused_constructor_parameters: true
+    avoid_redundant_argument_values: true
+    use_super_parameters: true
+    unnecessary_late: true
+    collection_methods_unrelated_type: true
+    prefer_const_constructors: true
+    prefer_const_literals_to_create_immutables: true
+    avoid_bool_literals_in_conditional_expressions: true
+    avoid_shadowing_type_parameters: true
+    unnecessary_parenthesis: true
+    unnecessary_this: true
+    require_trailing_commas: true
+    sort_constructors_first: true
+    unawaited_futures: warn
+    use_named_constants: true
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+title: Nestra
+message: Cite Nestra if you use it in academic or technical work.
+type: software
+authors:
+  - name: DIP Dev
+repository-code: https://github.com/dip-develop/nestra
+license: MIT
+version: 0.0.0-prealpha
+date-released: 2025-09-11
+abstract: >-
+  Nestra is a cross-platform desktop launcher and wrapper enabling web apps to
+  behave like native applications with tray integration, notifications, and
+  per-app isolation.
