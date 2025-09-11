@@ -1,0 +1,29 @@
+name: nestra
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  package_info_plus: ^8.3.1
+  #local_notifier: ^0.1.6
+  #window_manager: ^0.5.1
+  webview_cef: ^0.2.2
+  #tray_manager: ^0.5.1
+  #launch_at_startup: ^0.5.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/launch/
