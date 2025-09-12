@@ -37,6 +37,32 @@ Provide a unified launcher and runtime that:
 | Updates | Auto‑update channel (future) + change log surfacing. |
 | Extensibility | Plugin API (exploration phase). |
 
+## App icon
+
+The project includes a vector app icon that reflects Nestra’s mission: a stylized “N” with an orbital ring, symbolizing running web apps as first‑class desktop citizens.
+
+- Source: `assets/branding/nestra_icon.svg`
+- Packaged via `pubspec.yaml` assets
+
+Generating platform icons (optional):
+
+- Linux: supply `.png` sizes under `linux/runner/resources` (48, 64, 128, 256). Many DEs use the app’s `.desktop` entry icon.
+- macOS: add an `.icns` to the Xcode asset catalog under `macos/Runner/Assets.xcassets/AppIcon.appiconset`.
+- Windows: update the `.ico` in `windows/runner/Runner.rc`.
+
+You can export the SVG to sizes: 16, 32, 48, 64, 128, 256, 512, 1024.
+
+Export icons automatically:
+
+- Run the Dart script to export PNGs from the SVG:
+	- dart run tool/export_icons.dart
+	- Outputs to `build/icons/nestra/<size>.png`
+
+Create Linux desktop entries:
+
+- Hub (Nestra): uses `nestra.desktop` under `~/.local/share/applications`.
+- Per app: generates entries like `nestra-<id>.desktop` with `Exec=nestra --app <id>`.
+
 ## Quick Start (Developer Preview)
 
 Prerequisites (Linux example):

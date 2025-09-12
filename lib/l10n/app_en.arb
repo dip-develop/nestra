@@ -19,7 +19,12 @@
   "confirmDeleteMessage": "Delete {name}?",
   "popupEdit": "Edit",
   "popupDelete": "Delete",
+  "popupClearCache": "Clear cache",
+  "popupCreateLauncher": "Create launcher",
   "snackbarAdded": "App added",
   "snackbarUpdated": "App updated",
-  "snackbarDeleted": "App deleted"
+  "snackbarDeleted": "App deleted",
+  "snackbarCacheCleared": "Cache cleared",
+  "snackbarCacheClearFailed": "Cache clear failed",
+  "snackbarLauncherCreated": "Launcher created"
 }

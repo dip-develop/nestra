@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nestra/src/domain/usecases/apps_usecase.dart';
-import 'package:nestra/src/infrastructure/repositories/in_memory_app_repository.dart';
+import '../support/fake_app_repository.dart';
 
 void main() {
   test('create then list returns the app', () async {
-    final repo = InMemoryAppRepository();
+    final repo = FakeAppRepository();
     final useCase = AppsUseCase(repo);
 
     final created = await useCase.create(

@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nestra/src/domain/usecases/apps_usecase.dart';
-import 'package:nestra/src/infrastructure/repositories/in_memory_app_repository.dart';
+import '../support/fake_app_repository.dart';
 
 void main() {
   group('AppsUseCase', () {
     test('create + list', () async {
-      final repo = InMemoryAppRepository();
+      final repo = FakeAppRepository();
       final uc = AppsUseCase(repo);
       expect((await uc.list()).length, 0);
       final created = await uc.create(
@@ -18,7 +18,7 @@ void main() {
     });
 
     test('update', () async {
-      final repo = InMemoryAppRepository();
+      final repo = FakeAppRepository();
       final uc = AppsUseCase(repo);
       final created = await uc.create(
         name: 'Old',
@@ -35,7 +35,7 @@ void main() {
     });
 
     test('delete', () async {
-      final repo = InMemoryAppRepository();
+      final repo = FakeAppRepository();
       final uc = AppsUseCase(repo);
       final created = await uc.create(
         name: 'Temp',
@@ -47,7 +47,7 @@ void main() {
     });
 
     test('update non-existent throws', () async {
-      final repo = InMemoryAppRepository();
+      final repo = FakeAppRepository();
       final uc = AppsUseCase(repo);
       expect(
         () => uc.update(

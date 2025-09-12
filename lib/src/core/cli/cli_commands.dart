@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:nestra/src/core/cache/cache_paths.dart';
+import 'package:nestra/src/core/desktop/linux_desktop_entry.dart';
 import 'package:nestra/src/domain/entities/app_definition.dart';
 import 'package:nestra/src/domain/usecases/apps_usecase.dart';
 
@@ -12,6 +14,13 @@ final class CliRunHub extends CliCommand {}
 
 final class CliRunApp extends CliCommand {
   CliRunApp(this.appId);
+  final String appId;
+}
+
+final class CliInstallDesktop extends CliCommand {}
+
+final class CliInstallDesktopForApp extends CliCommand {
+  CliInstallDesktopForApp(this.appId);
   final String appId;
 }
 
@@ -45,6 +54,15 @@ final class CliInvalid extends CliCommand {
     ..addOption('register', help: 'Register app by URL (requires --name)')
     ..addOption('name', help: 'Name for app when using --register')
     ..addOption('icon', help: 'Icon path for --register')
+    ..addFlag(
+      'install-desktop',
+      help: 'Install Nestra desktop entry (Linux)',
+      negatable: false,
+    )
+    ..addOption(
+      'install-desktop-app',
+      help: 'Install desktop entry for app id (Linux)',
+    )
     ..addOption('clear-cache', help: 'Clear cache for app id (stub)')
     ..addFlag('reset', help: 'Factory reset (stub)', negatable: false)
     ..addFlag('help', abbr: 'h', help: 'Show help', negatable: false);
@@ -57,6 +75,17 @@ final class CliInvalid extends CliCommand {
     }
     if (results['list'] == true)
       return (command: CliList(), raw: results, parser: parser);
+    if (results['install-desktop'] == true) {
+      return (command: CliInstallDesktop(), raw: results, parser: parser);
+    }
+    final ida = results['install-desktop-app'] as String?;
+    if (ida != null && ida.isNotEmpty) {
+      return (
+        command: CliInstallDesktopForApp(ida),
+        raw: results,
+        parser: parser,
+      );
+    }
     if (results['reset'] == true)
       return (command: CliReset(), raw: results, parser: parser);
     final clear = results['clear-cache'] as String?;
@@ -113,10 +142,37 @@ Future<void> executePreUiCommand(
       stdout.writeln(jsonEncode({'status': 'registered', 'id': created.id}));
       exit(0);
     case CliClearCache(:final appId):
-      stdout.writeln(jsonEncode({'status': 'clear-cache-stub', 'id': appId}));
+      final app = await apps.get(appId);
+      if (app == null) {
+        stderr.writeln('Error: app not found: $appId');
+        exit(2);
+      }
+      final dir = Directory(perAppCachePath(app.name));
+      if (await dir.exists()) {
+        await dir.delete(recursive: true);
+      }
+      stdout.writeln(jsonEncode({'status': 'cleared', 'id': appId}));
       exit(0);
     case CliReset():
-      stdout.writeln(jsonEncode({'status': 'reset-stub'}));
+      final root = Directory(cacheRootDir());
+      if (await root.exists()) {
+        await root.delete(recursive: true);
+      }
+      stdout.writeln(jsonEncode({'status': 'reset'}));
+      exit(0);
+    case CliInstallDesktop():
+      // Best effort; only meaningful on Linux.
+      await installNestraDesktopEntry();
+      stdout.writeln(jsonEncode({'status': 'desktop-installed'}));
+      exit(0);
+    case CliInstallDesktopForApp(:final appId):
+      final app = await apps.get(appId);
+      if (app == null) {
+        stderr.writeln('Error: app not found: $appId');
+        exit(2);
+      }
+      await installAppDesktopEntry(app);
+      stdout.writeln(jsonEncode({'status': 'desktop-installed', 'id': appId}));
       exit(0);
     case CliInvalid(:final message):
       stderr.writeln('Error: $message');

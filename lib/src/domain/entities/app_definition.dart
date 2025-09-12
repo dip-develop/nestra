@@ -1,36 +1,22 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive_ce/hive.dart';
 
-class AppDefinition extends Equatable {
-  const AppDefinition({
-    required this.id,
-    required this.name,
-    required this.url,
-    this.iconPath,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+part 'app_definition.freezed.dart';
+part 'app_definition.g.dart';
 
-  final String id;
-  final String name;
-  final Uri url;
-  final String? iconPath;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+@HiveType(typeId: 1)
+@freezed
+abstract class AppDefinition with _$AppDefinition {
+  const factory AppDefinition({
+    @HiveField(0) required String id,
+    @HiveField(1) required String name,
+    @HiveField(2) required Uri url,
+    @HiveField(3) String? description,
+    @HiveField(4) String? iconPath,
+    @HiveField(5) required DateTime createdAt,
+    @HiveField(6) required DateTime updatedAt,
+  }) = _AppDefinition;
 
-  AppDefinition copyWith({
-    String? name,
-    Uri? url,
-    String? iconPath,
-    DateTime? updatedAt,
-  }) => AppDefinition(
-    id: id,
-    name: name ?? this.name,
-    url: url ?? this.url,
-    iconPath: iconPath ?? this.iconPath,
-    createdAt: createdAt,
-    updatedAt: updatedAt ?? DateTime.now(),
-  );
-
-  @override
-  List<Object?> get props => [id, name, url, iconPath, createdAt, updatedAt];
+  factory AppDefinition.fromJson(Map<String, dynamic> json) =>
+      _$AppDefinitionFromJson(json);
 }

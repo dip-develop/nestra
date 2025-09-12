@@ -1,5 +1,5 @@
 import 'package:injectable/injectable.dart';
-import 'package:logger/logger.dart' as ext;
+import 'package:ubuntu_logger/ubuntu_logger.dart' as ext;
 
 abstract class AppLogger {
   void debug(String message, [Object? error, StackTrace? stackTrace]);
@@ -14,14 +14,14 @@ class LoggerImpl extends AppLogger {
   final ext.Logger _logger;
   @override
   void debug(String message, [Object? error, StackTrace? stackTrace]) =>
-      _logger.d(message, error: error, stackTrace: stackTrace);
+      _logger.debug(message, error, stackTrace);
   @override
   void info(String message, [Object? error, StackTrace? stackTrace]) =>
-      _logger.i(message, error: error, stackTrace: stackTrace);
+      _logger.info(message, error, stackTrace);
   @override
   void warn(String message, [Object? error, StackTrace? stackTrace]) =>
-      _logger.w(message, error: error, stackTrace: stackTrace);
+      _logger.warning(message, error, stackTrace);
   @override
   void error(String message, [Object? error, StackTrace? stackTrace]) =>
-      _logger.e(message, error: error, stackTrace: stackTrace);
+      _logger.error(message, error, stackTrace);
 }

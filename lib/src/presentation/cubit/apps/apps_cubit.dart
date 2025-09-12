@@ -41,23 +41,34 @@ class AppsCubit extends Cubit<AppsState> {
     required String name,
     required Uri url,
     String? iconPath,
-  }) async {
-    try {
-      await _apps.create(name: name, url: url, iconPath: iconPath);
-      await load();
-    } catch (e, st) {
-      _logger.error('addApp failed', e, st);
-    }
-  }
+    String? description,
+  }) => _apps
+      .create(
+        name: name,
+        url: url,
+        iconPath: iconPath,
+        description: description,
+      )
+      .then((_) => load())
+      .catchError((e, st) {
+        _logger.error('addApp failed', e);
+      });
 
   Future<void> editApp({
     required String id,
     required String name,
     required Uri url,
     String? iconPath,
+    String? description,
   }) async {
     try {
-      await _apps.update(id: id, name: name, url: url, iconPath: iconPath);
+      await _apps.update(
+        id: id,
+        name: name,
+        url: url,
+        iconPath: iconPath,
+        description: description,
+      );
       await load();
     } catch (e, st) {
       _logger.error('editApp failed', e, st);

@@ -1,12 +1,8 @@
-import 'dart:collection';
-
-import 'package:injectable/injectable.dart';
 import 'package:nestra/src/domain/entities/app_definition.dart';
 import 'package:nestra/src/domain/repositories/app_repository.dart';
 
-@LazySingleton(as: AppRepository)
-class InMemoryAppRepository implements AppRepository {
-  final _store = HashMap<String, AppDefinition>();
+class FakeAppRepository implements AppRepository {
+  final Map<String, AppDefinition> _store = {};
 
   @override
   Future<AppDefinition> register(AppDefinition app) async {
@@ -15,8 +11,7 @@ class InMemoryAppRepository implements AppRepository {
   }
 
   @override
-  Future<List<AppDefinition>> list() async =>
-      _store.values.toList(growable: false);
+  Future<List<AppDefinition>> list() async => _store.values.toList();
 
   @override
   Future<AppDefinition?> getById(String id) async => _store[id];

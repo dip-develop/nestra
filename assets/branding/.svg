@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <linearGradient id="g" x2="1024" y2="1024" gradientTransform="translate(-3.5142e-6)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#4F46E5" offset="0"/>
+   <stop stop-color="#06B6D4" offset="1"/>
+  </linearGradient>
+ </defs>
+ <rect width="1024" height="1024" rx="220" fill="url(#g)"/>
+ <!-- Orbital ring -->
+ <!-- Stylized N -->
+ <ellipse transform="rotate(-18 1872.3 -1360.3)" rx="350" ry="210" fill="#582ba9" fill-opacity=".46667" stroke="rgba(255,255,255,0.25)" stroke-width="28"/>
+ <circle transform="rotate(-18)" cx="114.55" cy="892.03" r="22" fill="#fff"/>
+ <circle cx="882.46" cy="213.7" r="10" fill="none" opacity=".9"/>
+ <circle cx="882.46" cy="213.7" r="24" fill="#e7f7fd" fill-opacity=".6" opacity=".3" stroke="#fff" stroke-width="6"/>
+ <!-- Spark -->
+ <path d="m192.67 82.322h153.73l374.15 718.91v-718.91h110.78v859.36h-153.73l-374.15-718.91v718.91h-110.78z" fill="#e7f7fd" fill-opacity=".6" stroke-width="1.4601" aria-label="N"/>
+</svg>

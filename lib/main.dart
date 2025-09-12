@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:nestra/l10n/app_localizations.dart';
 import 'package:nestra/src/core/cli/cli_commands.dart';
@@ -12,7 +11,11 @@ import 'package:nestra/src/presentation/cubit/apps/apps_cubit.dart';
 import 'package:nestra/src/presentation/screens/browser/app_browser_screen.dart';
 import 'package:nestra/src/presentation/screens/home/home_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tray_manager/tray_manager.dart';
+import 'package:ubuntu_localizations/ubuntu_localizations.dart';
 import 'package:window_manager/window_manager.dart';
+
+import 'src/domain/entities/app_definition.dart';
 
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,21 +32,34 @@ Future<void> main(List<String> args) async {
     appPath: Platform.resolvedExecutable,
     packageName: 'dev.dip.nestra',
   );
-  // Decide initial route: open specific app if provided via CLI, else Home.
-  AppDefinitionForLaunch? launchApp;
+
+  AppDefinition? launchApp;
   if (cmd is CliRunApp) {
     final app = await appsUC.get(cmd.appId);
-    if (app != null) {
-      launchApp = AppDefinitionForLaunch(app);
-    }
+    launchApp = app;
   }
+
+  // Note: Avoid direct GTK notifier usage; Flutter embedder manages GTK.
+
+  await trayManager.setIcon(
+    Platform.isWindows ? 'images/tray_icon.ico' : 'images/tray_icon.png',
+  );
+  Menu menu = Menu(
+    items: [
+      MenuItem(key: 'show_window', label: 'Show Window'),
+      MenuItem.separator(),
+      MenuItem(key: 'exit_app', label: 'Exit App'),
+    ],
+  );
+  await trayManager.setContextMenu(menu);
+
   runApp(MyApp(launchApp: launchApp));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key, this.launchApp});
 
-  final AppDefinitionForLaunch? launchApp;
+  final AppDefinition? launchApp;
 
   @override
   Widget build(BuildContext context) {
@@ -54,22 +70,14 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.light(),
         darkTheme: ThemeData.dark(),
         localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
+          ...AppLocalizations.localizationsDelegates,
+          ...GlobalUbuntuLocalizations.delegates,
         ],
-        supportedLocales: const [Locale('en')],
+        supportedLocales: AppLocalizations.supportedLocales,
         home: launchApp == null
             ? const HomeScreen()
-            : AppBrowserScreen(app: launchApp!.app),
+            : AppBrowserScreen(app: launchApp!),
       ),
     );
   }
-}
-
-// Lightweight wrapper to avoid importing domain types in top-level conditional logic
-class AppDefinitionForLaunch {
-  AppDefinitionForLaunch(this.app);
-  final dynamic app; // AppDefinition
 }

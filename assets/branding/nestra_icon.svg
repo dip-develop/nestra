@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 1024 1024"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="nestra_icon.svg"
+   inkscape:version="1.4.2 (2aeb623e1d, 2025-05-12)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.21508789"
+     inkscape:cx="-241.76163"
+     inkscape:cy="-95.309875"
+     inkscape:window-width="1920"
+     inkscape:window-height="1131"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <defs
+     id="defs2">
+    <linearGradient
+       id="g"
+       x1="0"
+       y1="0"
+       x2="1024"
+       y2="1024"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-3.5141602e-6)">
+      <stop
+         offset="0"
+         stop-color="#4F46E5"
+         id="stop1" />
+      <stop
+         offset="100%"
+         stop-color="#06B6D4"
+         id="stop2" />
+    </linearGradient>
+    <filter
+       id="s"
+       x="0"
+       y="0"
+       width="1"
+       height="1">
+      <feDropShadow
+         dx="0"
+         dy="8"
+         stdDeviation="24"
+         flood-color="rgba(0,0,0,0.25)" />
+    </filter>
+  </defs>
+  <rect
+     width="1024"
+     height="1024"
+     rx="220"
+     fill="url(#g)"
+     id="rect2"
+     style="fill:url(#g)"
+     x="0"
+     y="0" />
+  <!-- Orbital ring -->
+  <g
+     transform="translate(512,512) rotate(-18)"
+     id="g2" />
+  <!-- Stylized N -->
+  <ellipse
+     cx="0"
+     cy="0"
+     rx="350"
+     ry="210"
+     fill="none"
+     stroke="rgba(255,255,255,0.25)"
+     stroke-width="28"
+     id="ellipse2"
+     style="fill:#582ba9;fill-opacity:0.46666703"
+     transform="rotate(-18,1872.3204,-1360.3204)" />
+  <circle
+     cx="114.54515"
+     cy="892.03479"
+     r="22"
+     fill="#ffffff"
+     id="circle2"
+     transform="rotate(-18)" />
+  <circle
+     cx="882.46295"
+     cy="213.6998"
+     r="10"
+     fill="white"
+     opacity="0.9"
+     id="circle3"
+     style="fill:none" />
+  <circle
+     cx="882.46295"
+     cy="213.6998"
+     r="24"
+     fill="none"
+     stroke="#ffffff"
+     opacity="0.3"
+     stroke-width="6"
+     id="circle4"
+     style="fill:#e7f7fd;fill-opacity:0.6" />
+  <!-- Spark -->
+  <path
+     d="m 192.67113,82.322397 h 153.73 L 720.55283,801.23375 V 82.322397 H 831.32886 V 941.6776 h -153.73 L 303.44716,222.76625 V 941.6776 H 192.67113 Z"
+     id="text5"
+     style="font-size:800px;fill:#e7f7fd;fill-opacity:0.6;stroke-width:1.46013"
+     aria-label="N" />
+</svg>

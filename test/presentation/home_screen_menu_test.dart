@@ -14,15 +14,20 @@ import '../support/fake_app_repository.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() {
+  setUp(() async {
     getIt.reset();
+    // Wiring minimal DI for the screen.
     getIt.registerLazySingleton<AppRepository>(() => FakeAppRepository());
     getIt.registerLazySingleton(() => AppsUseCase(getIt()));
     getIt.registerLazySingleton<AppLogger>(() => LoggerImpl());
     getIt.registerFactory(() => AppsCubit(getIt(), getIt()));
+
+    // Seed one app so the list has an item with a popup menu.
+    final apps = getIt<AppsUseCase>();
+    await apps.create(name: 'Example', url: Uri.parse('https://example.com'));
   });
 
-  testWidgets('home screen renders and shows empty state', (tester) async {
+  testWidgets('popup menu shows all actions', (tester) async {
     await tester.pumpWidget(
       BlocProvider(
         create: (_) => getIt<AppsCubit>()..load(),
@@ -33,7 +38,20 @@ void main() {
         ),
       ),
     );
-    await tester.pump();
-    expect(find.text(AppLocalizationsEn().homeNoApps), findsOneWidget);
+
+    // Let load() complete and the list render.
+    await tester.pumpAndSettle();
+
+    // Open the popup menu of the first list tile (trailing IconButton inside PopupMenuButton).
+    final menuButtonFinder = find.byType(PopupMenuButton<String>).first;
+    await tester.tap(menuButtonFinder);
+    await tester.pumpAndSettle();
+
+    // Verify localized menu entries are present.
+    final en = AppLocalizationsEn();
+    expect(find.text(en.popupEdit), findsOneWidget);
+    expect(find.text(en.popupClearCache), findsOneWidget);
+    expect(find.text(en.popupCreateLauncher), findsOneWidget);
+    expect(find.text(en.popupDelete), findsOneWidget);
   });
 }

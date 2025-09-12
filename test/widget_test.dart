@@ -14,16 +14,17 @@ import 'package:nestra/src/core/di/di.dart';
 import 'package:nestra/src/core/logging/logger.dart';
 import 'package:nestra/src/domain/repositories/app_repository.dart';
 import 'package:nestra/src/domain/usecases/apps_usecase.dart';
-import 'package:nestra/src/infrastructure/repositories/in_memory_app_repository.dart';
 import 'package:nestra/src/presentation/cubit/apps/apps_cubit.dart';
 import 'package:nestra/src/presentation/screens/home/home_screen.dart';
+
+import 'support/fake_app_repository.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
     getIt.reset();
-    getIt.registerLazySingleton<AppRepository>(() => InMemoryAppRepository());
+    getIt.registerLazySingleton<AppRepository>(() => FakeAppRepository());
     getIt.registerLazySingleton(() => AppsUseCase(getIt()));
     getIt.registerLazySingleton<AppLogger>(() => LoggerImpl());
     getIt.registerFactory(() => AppsCubit(getIt(), getIt()));
@@ -36,7 +37,7 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const HomeScreen(),
+          home: HomeScreen(),
         ),
       ),
     );

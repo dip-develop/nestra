@@ -45,5 +45,9 @@ app.*.map.json
 /android/app/release
 
 **/*.lock
+**/*.config.dart
+**/*.freezed.dart
+**/*.g.dart
 lib/l10n/app_localizations.dart
 lib/l10n/app_localizations_en.dart
+

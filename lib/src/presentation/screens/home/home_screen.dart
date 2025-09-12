@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nestra/l10n/app_localizations.dart';
+import 'package:nestra/src/core/desktop/icon_helper.dart';
+import 'package:nestra/src/core/desktop/linux_desktop_entry.dart';
 import 'package:nestra/src/presentation/cubit/apps/apps_cubit.dart';
 import 'package:nestra/src/presentation/screens/browser/app_browser_screen.dart';
 import 'package:nestra/src/presentation/widgets/app_edit_dialog.dart';
@@ -35,9 +40,36 @@ class _HomeScreenState extends State<HomeScreen> {
               itemCount: state.apps.length,
               itemBuilder: (context, index) {
                 final app = state.apps[index];
+                Widget? leading;
+                final iconPath = app.iconPath;
+                if (iconPath != null && iconPath.isNotEmpty) {
+                  final lower = iconPath.toLowerCase();
+                  if (lower.endsWith('.svg')) {
+                    leading = SvgPicture.file(
+                      File(iconPath),
+                      width: 32,
+                      height: 32,
+                    );
+                  } else {
+                    leading = Image.file(
+                      File(iconPath),
+                      width: 32,
+                      height: 32,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) =>
+                          const SizedBox(width: 32, height: 32),
+                    );
+                  }
+                }
                 return ListTile(
+                  leading: leading,
                   title: Text(app.name),
-                  subtitle: Text(app.url.toString()),
+                  subtitle: Text(
+                    (app.description != null &&
+                            app.description!.trim().isNotEmpty)
+                        ? app.description!.trim()
+                        : app.url.toString(),
+                  ),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -62,12 +94,35 @@ class _HomeScreenState extends State<HomeScreen> {
                             name: result.name,
                             url: result.url,
                             iconPath: result.iconPath,
+                            description: result.description,
                           );
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(l10n.snackbarUpdated)),
                             );
                           }
+                        }
+                      } else if (value == 'clear-cache') {
+                        final ok = await clearAppCache(app.name);
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                ok
+                                    ? l10n.snackbarCacheCleared
+                                    : l10n.snackbarCacheClearFailed,
+                              ),
+                            ),
+                          );
+                        }
+                      } else if (value == 'create-launcher') {
+                        await installAppDesktopEntry(app);
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(l10n.snackbarLauncherCreated),
+                            ),
+                          );
                         }
                       } else if (value == 'delete') {
                         final confirm = await showDialog<bool>(
@@ -99,6 +154,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     itemBuilder: (ctx) => [
                       PopupMenuItem(value: 'edit', child: Text(l10n.popupEdit)),
+                      const PopupMenuDivider(),
+                      PopupMenuItem(
+                        value: 'clear-cache',
+                        child: Text(l10n.popupClearCache),
+                      ),
+                      PopupMenuItem(
+                        value: 'create-launcher',
+                        child: Text(l10n.popupCreateLauncher),
+                      ),
+                      const PopupMenuDivider(),
                       PopupMenuItem(
                         value: 'delete',
                         child: Text(l10n.popupDelete),
@@ -119,16 +184,21 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () async {
           final result = await showAppEditDialog(context);
           if (result != null) {
-            await context.read<AppsCubit>().addApp(
-              name: result.name,
-              url: result.url,
-              iconPath: result.iconPath,
-            );
-            if (context.mounted) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(l10n.snackbarAdded)));
-            }
+            await context
+                .read<AppsCubit>()
+                .addApp(
+                  name: result.name,
+                  url: result.url,
+                  iconPath: result.iconPath,
+                  description: result.description,
+                )
+                .then((_) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(l10n.snackbarAdded)));
+                  }
+                });
           }
         },
         child: const Icon(Icons.add),
