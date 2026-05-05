@@ -18,7 +18,6 @@ class BrowserWidget extends StatefulWidget {
 
 class _BrowserWidgetState extends State<BrowserWidget> {
   WebViewController? _controller;
-  final _webviewManager = WebviewManager();
   bool _initScheduled = false;
 
   @override
@@ -47,7 +46,7 @@ class _BrowserWidgetState extends State<BrowserWidget> {
       ),
     );
 
-    final controller = _webviewManager.createWebView(
+    final controller = WebviewManager().createWebView(
       loading: const Center(child: CircularProgressIndicator()),
       injectUserScripts: injectUserScripts,
     );
@@ -71,12 +70,12 @@ class _BrowserWidgetState extends State<BrowserWidget> {
     final rootCachePath = perAppCachePath(widget.application.id);
     await Directory(rootCachePath).create(recursive: true);
 
-    await _webviewManager.initialize(
+    await WebviewManager().initialize(
       userAgent: kChromiumUserAgent,
-      cachePath: rootCachePath,
-      enableGPU: true,
       persistSessionCookies: true,
       persistUserPreferences: true,
+      cachePath: rootCachePath,
+      initTimeout: const Duration(seconds: 10),
     );
 
     if (!mounted) return;
@@ -92,10 +91,10 @@ class _BrowserWidgetState extends State<BrowserWidget> {
     final controller = _controller;
     return controller == null
         ? const Center(child: CircularProgressIndicator())
-        : ValueListenableBuilder(
+        : ValueListenableBuilder<bool>(
             valueListenable: controller,
             builder: (context, value, child) {
-              return controller.value
+              return (controller.value)
                   ? controller.webviewWidget
                   : controller.loadingWidget;
             },
@@ -105,7 +104,7 @@ class _BrowserWidgetState extends State<BrowserWidget> {
   @override
   void dispose() {
     _controller?.dispose();
-    _webviewManager.quit();
+    WebviewManager().quit();
     super.dispose();
   }
 }
