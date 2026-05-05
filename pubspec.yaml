@@ -17,9 +17,10 @@ dependencies:
   ubuntu_localizations: ^0.5.2+2
   cupertino_icons: ^1.0.8
   package_info_plus: ^9.0.0
-  local_notifier: ^0.1.6
+  #local_notifier: ^0.1.6
   window_manager: ^0.5.1
-  webview_cef: ^0.2.2
+  webview_cef: #^0.2.2
+    path: ../webview_cef
   tray_manager: ^0.5.1
   launch_at_startup: ^0.5.1
   get_it: ^8.2.0
@@ -28,14 +29,14 @@ dependencies:
   equatable: ^2.0.7
   freezed_annotation: ^3.1.0
   args: ^2.7.0
-  xdg_icons: ^0.1.2
-  ubuntu_widgets: ^0.7.3
-  ubuntu_service: ^0.4.0+1
+  #xdg_icons: ^0.1.2
+  #ubuntu_widgets: ^0.7.3
+  #ubuntu_service: ^0.4.0+1
   ubuntu_logger: ^0.2.1+1
-  gtk: ^2.1.0
+  #gtk: ^2.1.0
   http: ^1.5.0
   html: ^0.15.6
-  desktop_drop: ^0.6.1
+  #desktop_drop: ^0.6.1
   flutter_svg: ^2.2.1
   image: ^4.5.4
   hive_ce: ^2.12.0
@@ -50,7 +51,7 @@ dev_dependencies:
   injectable_generator: ^2.8.1
   freezed: ^3.2.3
   hive_ce_generator: ^1.9.5
-  json_serializable: ^6.9.0
+  json_serializable: ^6.11.1
 
 dependency_overrides:
   build: ^4.0.0

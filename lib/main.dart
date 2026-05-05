@@ -5,7 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:nestra/l10n/app_localizations.dart';
 import 'package:nestra/src/core/cli/cli_commands.dart';
+import 'package:nestra/src/core/desktop/icon_helper.dart';
 import 'package:nestra/src/core/di/di.dart';
+import 'package:nestra/src/domain/entities/app_definition.dart';
 import 'package:nestra/src/domain/usecases/apps_usecase.dart';
 import 'package:nestra/src/presentation/cubit/apps/apps_cubit.dart';
 import 'package:nestra/src/presentation/screens/browser/app_browser_screen.dart';
@@ -14,8 +16,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:ubuntu_localizations/ubuntu_localizations.dart';
 import 'package:window_manager/window_manager.dart';
-
-import 'src/domain/entities/app_definition.dart';
 
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,9 +41,14 @@ Future<void> main(List<String> args) async {
 
   // Note: Avoid direct GTK notifier usage; Flutter embedder manages GTK.
 
-  await trayManager.setIcon(
-    Platform.isWindows ? 'images/tray_icon.ico' : 'images/tray_icon.png',
-  );
+  // Prepare tray icon (prefer generated 256px PNG from our SVG asset)
+  String? trayIconPath;
+  if (Platform.isWindows) {
+    trayIconPath = 'images/tray_icon.ico';
+  } else {
+    trayIconPath = await prepareNestraIcon256() ?? 'images/tray_icon.png';
+  }
+  await trayManager.setIcon(trayIconPath);
   Menu menu = Menu(
     items: [
       MenuItem(key: 'show_window', label: 'Show Window'),
@@ -52,6 +57,7 @@ Future<void> main(List<String> args) async {
     ],
   );
   await trayManager.setContextMenu(menu);
+  trayManager.addListener(_TrayHandler());
 
   runApp(MyApp(launchApp: launchApp));
 }
@@ -79,5 +85,30 @@ class MyApp extends StatelessWidget {
             : AppBrowserScreen(app: launchApp!),
       ),
     );
+  }
+}
+
+class _TrayHandler with TrayListener {
+  @override
+  void onTrayIconMouseDown() async {
+    // Show window when clicking tray icon
+    await windowManager.show();
+    await windowManager.focus();
+  }
+
+  @override
+  void onTrayMenuItemClick(MenuItem menuItem) async {
+    switch (menuItem.key) {
+      case 'show_window':
+        await windowManager.show();
+        await windowManager.focus();
+        break;
+      case 'exit_app':
+        // Ensure clean exit on all platforms
+        await trayManager.destroy();
+        exit(0);
+      default:
+        break;
+    }
   }
 }

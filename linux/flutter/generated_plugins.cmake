@@ -3,15 +3,10 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  desktop_drop
-  gtk
-  local_notifier
   screen_retriever_linux
   tray_manager
   webview_cef
   window_manager
-  xdg_icons
-  yaru_window_linux
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

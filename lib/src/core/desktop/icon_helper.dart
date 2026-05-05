@@ -1,5 +1,5 @@
 import 'dart:io';
-
+// ignore_for_file: avoid_positional_boolean_parameters
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 import 'package:nestra/src/core/cache/cache_paths.dart';
@@ -23,7 +23,25 @@ Future<String?> prepareNestraIcon256() async {
     await exported.copy(target.path);
     return target.path;
   }
-  return null;
+  // Fallback: draw a simple placeholder PNG
+  try {
+    final image256 = img.Image(width: 256, height: 256);
+    // Background
+    img.fill(image256, color: img.ColorRgb8(30, 136, 229)); // blue-ish
+    // Inner circle
+    img.drawCircle(
+      image256,
+      x: 128,
+      y: 128,
+      radius: 88,
+      color: img.ColorRgb8(255, 255, 255),
+    );
+    final png = img.encodePng(image256);
+    await target.writeAsBytes(png);
+    return target.path;
+  } catch (_) {
+    return null;
+  }
 }
 
 /// Prepare a 256px PNG for the app icon if possible; returns the resulting path or null.
@@ -123,12 +141,13 @@ Future<String?> downloadIconFromUrl(
   }
 }
 
-/// Delete cached webview data for a given app name.
-Future<bool> clearAppCache(String appName) async {
+/// Delete cached webview data for a given app id (or legacy name).
+Future<bool> clearAppCache(String appIdOrName) async {
   try {
-    final dir = Directory(perAppCachePath(appName));
-    if (await dir.exists()) {
-      await dir.delete(recursive: true);
+    // New path (id-based)
+    final byId = Directory(perAppCachePath(appIdOrName));
+    if (await byId.exists()) {
+      await byId.delete(recursive: true);
     }
     return true;
   } catch (_) {

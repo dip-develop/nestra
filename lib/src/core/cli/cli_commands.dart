@@ -147,7 +147,7 @@ Future<void> executePreUiCommand(
         stderr.writeln('Error: app not found: $appId');
         exit(2);
       }
-      final dir = Directory(perAppCachePath(app.name));
+      final dir = Directory(perAppCachePath(app.id));
       if (await dir.exists()) {
         await dir.delete(recursive: true);
       }

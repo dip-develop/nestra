@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         }
                       } else if (value == 'clear-cache') {
-                        final ok = await clearAppCache(app.name);
+                        final ok = await clearAppCache(app.id);
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

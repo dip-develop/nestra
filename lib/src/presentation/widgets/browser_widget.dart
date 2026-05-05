@@ -1,9 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:nestra/src/core/cache/cache_paths.dart';
 import 'package:nestra/src/core/web/user_agent.dart';
-import 'package:webview_cef/src/webview_inject_user_script.dart';
 import 'package:webview_cef/webview_cef.dart';
 
 import '../../domain/entities/app_definition.dart';
@@ -68,22 +68,23 @@ class _BrowserWidgetState extends State<BrowserWidget> {
   }
 
   Future<void> initPlatformState() async {
-    // Compute per-app cache directory: ~/.nestra/cache/<app-id>
     final rootCachePath = perAppCachePath(widget.application.id);
-    // Ensure the directory exists
     await Directory(rootCachePath).create(recursive: true);
 
-    // TODO(dip): Pass rootCachePath to CEF once the plugin exposes it.
-    // For now we only prepare the directory and initialize as usual.
-    await _webviewManager
-        .initialize(userAgent: kChromiumUserAgent)
-        .timeout(const Duration(seconds: 20));
+    await _webviewManager.initialize(
+      userAgent: kChromiumUserAgent,
+      cachePath: rootCachePath,
+      enableGPU: true,
+      persistSessionCookies: true,
+      persistUserPreferences: true,
+    );
+
     if (!mounted) return;
-    // Create WebView only after CEF initialized
     _createWebView();
     if (_controller == null) return;
     final url = widget.application.url.toString();
-    await _controller!.initialize(url).timeout(const Duration(seconds: 20));
+
+    await _controller!.initialize(url);
   }
 
   @override
